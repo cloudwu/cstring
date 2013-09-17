@@ -32,7 +32,7 @@ typedef struct cstring_data * cstring;
 
 #define CSTRING_LITERAL(var, cstr)	\
 	static cstring var = NULL;	\
-	if (var == NULL) {	\
+	if (var) {} else {	\
 		cstring tmp = cstring_persist(""cstr, (sizeof(cstr)/sizeof(char))-1);	\
 		if (!__sync_bool_compare_and_swap(&var, NULL, tmp)) {	\
 			cstring_free_persist(tmp);	\
@@ -42,7 +42,7 @@ typedef struct cstring_data * cstring;
 #define CSTRING(s) ((s)->str)
 
 #define CSTRING_CLOSE(var) \
-	if ((var)->str->type == 0) \
+	if ((var)->str->type != 0) {} else \
 		cstring_release((var)->str);
 
 /* low level api, don't use directly */
