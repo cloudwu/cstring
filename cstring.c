@@ -146,7 +146,7 @@ hash_blob(const char * buffer, size_t len) {
 }
 
 void 
-cstring_free_permanent(cstring s) {
+cstring_free_persist(cstring s) {
 	if (s->type == CSTRING_PERMANENT) {
 		free(s);
 	}
@@ -171,7 +171,7 @@ cstring_clone(const char * cstr, size_t sz) {
 }
 
 cstring 
-cstring_permanent(const char * cstr, size_t sz) {
+cstring_persist(const char * cstr, size_t sz) {
 	cstring s = cstring_clone(cstr, sz);
 	if (s->type == 0) {
 		s->type = CSTRING_PERMANENT;
