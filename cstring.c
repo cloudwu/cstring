@@ -177,20 +177,16 @@ cstring_persist(const char * cstr, size_t sz) {
 		s->type = CSTRING_PERMANENT;
 		s->ref = 0;
 	}
-	__sync_synchronize();
 	return s;
 }
 
 cstring
 cstring_grab(cstring s) {
-	__sync_synchronize();
-
 	if (s->type & (CSTRING_PERMANENT | CSTRING_INTERNING)) {
 		return s;
 	}
 	if (s->type == CSTRING_ONSTACK) {
 		cstring tmp = cstring_clone(s->cstr, s->hash_size);
-		__sync_synchronize();
 		return tmp;	
 	} else {
 		if (s->ref == 0) {
@@ -204,7 +200,6 @@ cstring_grab(cstring s) {
 
 void 
 cstring_release(cstring s) {
-	__sync_synchronize();
 	if (s->type != 0) {
 		return;
 	}
