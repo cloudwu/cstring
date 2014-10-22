@@ -125,6 +125,7 @@ cstring_interning(const char * cstr, size_t sz, uint32_t hash) {
 		expand(&S);
 		ret = interning(&S, cstr, sz, hash);
 	}
+	++S.total;
 	UNLOCK();
 	assert(ret);
 	return ret;
