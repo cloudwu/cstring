@@ -306,14 +306,17 @@ cstring_format(const char * format, va_list ap) {
 		// todo : check malloc 
 		assert(temp);
 	}
-	int n = vsnprintf(temp, FORMAT_TEMP_SIZE, format, ap);
+	va_list ap2;
+	va_copy(ap2, ap);
+	int n = vsnprintf(temp, FORMAT_TEMP_SIZE, format, ap2);
 	if (n >= FORMAT_TEMP_SIZE) {
 		int sz = FORMAT_TEMP_SIZE * 2;
 		for (;;) {
 			result = malloc(sz);
 			// todo : check malloc
 			assert(result);
-			n = vsnprintf(result, sz, format, ap);
+			va_copy(ap2, ap);
+			n = vsnprintf(result, sz, format, ap2);
 			if (n >= sz) {
 				free(result);
 				sz *= 2;
@@ -352,6 +355,8 @@ cstring_printf(cstring_buffer sb, const char * format, ...) {
 	if (s->type == CSTRING_ONSTACK) {
 		int n = vsnprintf(s->cstr, CSTRING_STACK_SIZE, format, ap);
 		if (n >= CSTRING_STACK_SIZE) {
+			va_end(ap);
+			va_start(ap, format);
 			s = cstring_format(format, ap);
 			sb->str = s;
 		} else {
